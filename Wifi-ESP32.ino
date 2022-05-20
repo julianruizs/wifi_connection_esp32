@@ -1,9 +1,21 @@
 #include <WiFi.h> // Include wifi library
 //--------------------------------------------
-#define WLAN  ""  // Include WLAN name
-#define PASSWD "" // Include PASSWD of WLAN
+#define WLAN  "bender"  // Include WLAN name
+#define PASSWD "12345678" // Include PASSWD of WLAN
 #define TIME_OUT 15000 //Modify connection timeot in miliseconds
+#define TIME_OUT_2 15000
 //--------------------------------------------
+unsigned long previous_time = 0;
+ 
+void check_connection(){ // Check the connection every TIME_OUT_2 ms
+  unsigned long start_time_2 = millis();
+  if((WiFi.status()!= WL_CONNECTED) && (start_time_2 - previous_time >= TIME_OUT_2)){
+    Serial.println("Trying to reconnect the device...");
+    WiFi.disconnect();
+    WiFi.reconnect();
+    previous_time = start_time_2; 
+  }  
+}
 
 void wifi_connection(){
   Serial.println("Start WiFi connection"); // Print initial message
@@ -40,6 +52,6 @@ wifi_connection();
 }
 
 void loop() {
-
+check_connection();// Check the connection every TIME_OUT_2 ms
 // Your code goes here
 }
